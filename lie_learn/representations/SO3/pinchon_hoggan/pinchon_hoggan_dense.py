@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from scipy.linalg import block_diag
+import torch
 
 # This code is not very optimized,
 # and can never become very efficient because it cannot exploit the sparsity of the J matrix.
@@ -59,6 +60,8 @@ def z_rot_mat(angle, l):
     inds = np.arange(0, 2 * l + 1, 1)
     reversed_inds = np.arange(2 * l, -1, -1)
     frequencies = np.arange(l, -l - 1, -1)
+    if torch.is_tensor(angle):
+        angle = angle.numpy()
     M[inds, reversed_inds] = np.sin(frequencies * angle)
     M[inds, inds] = np.cos(frequencies * angle)
     return M
